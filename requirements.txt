@@ -1,0 +1,4 @@
+GitPython==3.1.31
+
+PyPDF2==3.0.1
+python-git==2018.2.1
