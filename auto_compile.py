@@ -1,4 +1,5 @@
 import os
+import codecs
 import subprocess
 import time
 
@@ -76,7 +77,14 @@ while True:
             pdf_files = []
             for change in diff:
                 filename = change.a_path  # Имя файла изменения
-                if os.path.splitext(filename)[1] in [".tex", ".bib"]:
+                ext = os.path.splitext(filename)[1]
+                if ext in [".tex", ".bib"]:
+                    # Изменяем кодировку файла на utf-8
+                    with codecs.open(os.path.join(SOURCE_PATH, filename), "r", encoding="cp1251") as f:
+                        content = f.read()
+                        with codecs.open(os.path.join(SOURCE_PATH, filename), "w", encoding="utf-8") as f:
+                            f.write(content)
+
                     pdf_file = compile_to_pdf(filename)
                     pdf_files.append(pdf_file)
 
