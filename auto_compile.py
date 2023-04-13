@@ -1,5 +1,7 @@
 import os
 import subprocess
+import time
+
 from git import Repo
 from PyPDF2 import PdfFileMerger, PdfFileReader
 
@@ -88,5 +90,5 @@ while True:
             # Обновляем указатель на последний коммит
             branch.commit = repo.head.commit
 
-# Ждем некоторое время перед следующей проверкой изменений
-time.sleep(60)
+    # Ждем некоторое время перед следующей проверкой изменений
+    time.sleep(60)
