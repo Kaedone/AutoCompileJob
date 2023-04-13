@@ -62,24 +62,23 @@ def merge_pdfs(filenames, output_file):
 
 # Инициализируем репозиторий
 repo = Repo(REPO_PATH)
-
 # Получаем текущую ветку
 branch = repo.head.reference
 
 while True:
     # Проверяем изменения в репозитории
-    if branch.name == BRANCH_NAME and branch.commit != repo.head.commit:
-        print("New changes detected, compiling...")
+    if branch.name == BRANCH_NAME:
+        diff = branch.commit.diff(None)  # Получаем объект изменений между предыдущим коммитом и текущим
+        if diff:  # Если есть изменения
+            print("New changes detected, compiling...")
 
-        # Получаем список измененных файлов
-        diff = repo.git.diff("--name-only", branch.commit, repo.head.commit).split()
-
-        # Компилируем каждый из измененных файлов
-        pdf_files = []
-        for filename in diff:
-            if os.path.splitext(filename)[1] in [".tex", ".bib"]:
-                pdf_file = compile_to_pdf(filename)
-                pdf_files.append(pdf_file)
+            # Компилируем каждый из измененных файлов
+            pdf_files = []
+            for change in diff:
+                filename = change.a_path  # Имя файла изменения
+                if os.path.splitext(filename)[1] in [".tex", ".bib"]:
+                    pdf_file = compile_to_pdf(filename)
+                    pdf_files.append(pdf_file)
 
             # Объединяем PDF-файлы в один
             if pdf_files:
